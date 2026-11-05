@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Triatra Fresh 5.0 – Klasemen</title>
+<style>
+:root{--bg:#0e0e0e;--card:#141414;--line:#2a2a2a;--tx:#f2f2f0;--mu:#8d8d88;--g:#5f9f1c;--tr:#1b1b1b}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;padding:14px}
+.wrap{max-width:1500px;margin:0 auto;background:#111;border:1px solid var(--line);border-radius:18px;padding:18px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+h1{font-size:16px;margin:0;letter-spacing:.02em;font-weight:600}
+.cut{font-size:12px;color:var(--mu);border:1px solid var(--line);background:var(--card);border-radius:8px;padding:6px 12px}
+.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:10px}
+.tab{background:#0b0b0b;border:1px solid var(--line);color:var(--tx);border-radius:10px;padding:12px;font:600 14px inherit;font-family:inherit;cursor:pointer}
+.tab.on{background:#f1f0ee;color:#111}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:10px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:9px 14px;min-width:0}
+.card small{display:block;color:var(--mu);font-size:11px;margin-bottom:4px}
+.card b{font-size:20px;font-weight:600;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.card em{font-style:normal;color:var(--mu);font-size:11px}
+.grid{display:grid;grid-template-columns:1.25fr 1fr;gap:10px}.grid.k3{grid-template-columns:1.7fr 1fr 1fr}.rt{display:flex;gap:10px;align-items:center}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px;min-width:0}
+.panel h3{margin:0 0 10px;font-size:12px;font-weight:500;color:var(--mu)}
+.scroll{max-height:calc(100vh - 330px);min-height:240px;overflow:auto;scrollbar-width:thin;scrollbar-color:#333 transparent}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{color:var(--mu);font-weight:400;text-align:left;font-size:11px;padding:0 0 6px;position:sticky;top:0;background:var(--card)}
+td{padding:6px 0;border-top:1px solid #222}th.r,td.r{text-align:right}
+td.n{font-weight:500;font-size:12.5px}td.a{color:var(--mu);font-size:11px}td.k{font-weight:600}
+.rk{display:inline-block;width:20px;height:20px;line-height:20px;text-align:center;border-radius:5px;font-size:11px;font-weight:700;color:#111}
+.r1{background:#f3b66b}.r2{background:#c9c9c7}.r3{background:#e8896a}.rn{color:var(--mu);font-weight:400;background:none}
+.bars{display:flex;flex-direction:column;gap:7px}
+.b{display:grid;grid-template-columns:96px 1fr 38px;gap:8px;align-items:center;font-size:11.5px}
+.b span.l{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.trk{background:var(--tr);border-radius:3px;height:13px;overflow:hidden}.fill{height:100%;background:var(--g);border-radius:3px}
+.b span.v{text-align:right;font-weight:600}
+.muted td{color:var(--mu)}
+.search{width:260px;background:#0b0b0b;border:1px solid var(--line);color:var(--tx);border-radius:10px;padding:7px 12px;font:13px inherit;font-family:inherit;outline:none}
+.search:focus{border-color:#5f9f1c}.full{grid-column:1/-1}.hide{display:none}
+td.m{color:#b9b9b4;font-size:11px;line-height:1.5;max-width:240px}tr.sel td{background:#1b2412}tr.team{cursor:pointer}
+.th td{background:#1a1a1a;border-top:1px solid #333;padding:8px 0}.th td:first-child{padding-left:6px}.mem td{padding:4px 0;font-size:11.5px}.mn{padding-left:28px!important;color:#d6d6d2}.mem td.r{color:#b9b9b4}
+.b[data-team]{cursor:pointer}.b.on .fill{background:#8fd43a}.b.on .l{font-weight:700}
+.empty{color:var(--mu);font-size:12px;padding:12px 0}
+@media(max-width:900px){.grid,.grid.k3{grid-template-columns:1fr}.scroll{max-height:420px}.search{width:100%}.rt{width:100%}.cards{grid-template-columns:1fr 1fr 1fr}.card b{font-size:17px}.b{grid-template-columns:84px 1fr 38px}}
+</style></head><body>
+<div class="wrap">
+ <div class="top"><h1 id="ttl"></h1><div class="rt"><input class="search" id="q" type="search" placeholder="Cari nama atau area…"><div class="cut" id="cut"></div></div></div>
+ <div class="tabs"><button class="tab on" data-t="walk">WALK</button><button class="tab" data-t="run">RUN</button><button class="tab" data-t="kon">KONTINGEN</button></div>
+ <div class="cards" id="cards"></div>
+ <div class="grid" id="grid"><div class="panel" id="p1"><h3 id="h1"></h3><div class="scroll" id="tbl"></div></div>
+ <div class="panel"><h3 id="h2"></h3><div class="bars" id="bars"></div></div>
+ <div class="panel hide" id="p3"><h3 id="h3"></h3><div class="bars" id="bars3"></div></div></div>
+</div>
+<script>
+const D={"walk": [["Mohammad Hammam", "MKT", 81.04], ["Ario Adipradono", "SAL", 59.13], ["Rifqi Azhar", "OPS", 52.26], ["Yunita A Latifah", "BUS", 44.64], ["Nursari Fatul Fitri", "SAL", 43.27], ["Feri Purwanto", "SDU", 42.12], ["Ceisar Centiaga", "MKT", 41.55], ["Megawati Adia Putri", "SDU", 34.7], ["Wicaksono Banjar", "BKJ", 33.35], ["Yogi Triguna Yusman", "MKT", 29.83], ["AdhityaHadi Saputra", "ITB", 28.16], ["Ujang Jaelani", "TJR", 27.36], ["Chrisman Wibowo", "BUS", 26.55], ["Anggi", "MKT", 26.1], ["Qurrotul Uyuniyah", "SGT", 25.48], ["Marsha Andriana", "ITB", 25.15], ["Putri Novita", "BUS", 24.14], ["Roger Triatra", "SAL", 23.52], ["Yuda Wijaya", "MKT", 22.67], ["Ambar tri putri", "BUS", 21.42], ["Andy Suhermanto", "SGT", 21.0], ["Saepul Ahmad", "TMK", 20.45], ["Alex Site Tanjung Enim", "TJE", 20.24], ["Jentrisi Priyatno", "TMK", 19.91], ["Defrizal Zal", "MTW", 19.12], ["Dwiyanti Setyaningsih", "ITB", 18.36], ["Hendra Saputra", "SAL", 18.16], ["OPS _Ekky Novanto Pratama", "-", 18.0], ["Achmad Reska Anggarianto", "TMK", 17.3], ["SGT - Nuris Kartini Khonitasani", "-", 16.79], ["Raymond Fadly", "MKT", 16.07], ["Teguh_Cahyono", "BUS", 15.72], ["Nurmala Filmika", "BUS", 15.04], ["Adi Setya Nugraha", "OPS", 14.61], ["MKT-Vanisa Dl", "-", 14.45], ["Anita Anwar", "SGT", 14.25], ["Wibby Bernaldi", "ITB", 13.53], ["Lilis Nur Kusuma Wardani", "ITB", 13.04], ["Benedictus Bagaskoro", "OPS", 12.83], ["SeptianD Nugraha", "MKT", 11.88], ["Muhammad Khairurraziqin", "SGT", 11.82], ["Fransisco Laverna", "SGT", 11.82], ["Dhanang Tri Kurniawan", "MKT", 11.77], ["Prasetyo P", "SGT", 11.61], ["Adinda Siti K", "MKT", 10.33], ["Eko Prasetyo", "TJG", 10.06], ["Rizky Nugraha", "MKT", 10.05], ["Ghifa Pane", "JKT", 10.01], ["Rossa Fitria", "BUS", 9.8], ["Octavianus", "DBP", 9.59], ["Kalingga Padel", "ITB", 8.36], ["Najid Fitra Fathur Rahman", "SAL", 8.01], ["FAKHRI AZZUMAR â˜¯ï¸", "BUS", 7.57], ["Damas Bayu Raharjo", "TJG", 7.37], ["Luffy Angga", "BUS", 6.84], ["SGT - Fredy Armanda", "-", 6.01], ["Jesica Amelia Kischa Parante", "TMK", 5.45], ["Irawan J.a", "TMK", 5.33], ["Yacub Rusdi", "TJG", 5.24], ["Alfred Pilipus Peka", "SGT", 5.18], ["Khemal Alharits", "MKT", 5.16], ["Efin Budi", "MKT", 5.16], ["ITB - Laurensius David", "", 5.14], ["M Yusuf Sumardani", "TJG", 4.53], ["Muhammad Fadlan", "MKT", 4.11], ["Bima A. Syahputra", "TMK", 3.94], ["Putri Firania", "TMK", 3.81], ["Linda Aprida", "SGT", 3.63], ["Yanri Sondakh", "TMK", 3.46], ["Ervin Bp", "MKT", 3.28], ["Adelaide Zapata", "MKT", 3.01], ["Michael Gambeh", "TMK", 2.81], ["Ugik Praseno", "MKT", 2.14], ["Aditya Pradana", "JKT", 1.6], ["Meisin S Sorongan", "TMK", 1.52], ["Mkt Bai", "-", 1.52], ["Ricardo Tanada", "MKT", 1.5]], "run": [["Dodi Hermawan", "SDU", 86.38], ["Rejib Ganda", "TJG", 75.34], ["Zainul Akbar", "TMK", 73.8], ["Rizkika Angger", "BUS", 56.01], ["Dimas Lonardi", "ITB", 53.08], ["Sugeng Riyadi", "JKT", 51.3], ["Nanda Dwi Rahmadan", "JKT", 50.29], ["Andrianto Purnomo", "DJK", 32.74], ["Irwan Mubar", "TMK", 31.2], ["Ramadhani Sugi Raharjo", "JKT", 30.58], ["Arief Rahman Syahrija", "TJR", 30.1], ["Nursaini", "TJR", 29.74], ["Andri Prasetya Febrianto", "MLK", 28.46], ["Andy Prasetyo", "MLK", 28.05], ["Ricardo Tanada", "MKT", 27.13], ["Faryz Gaffar", "TMK", 26.91], ["Josua Bernandus", "DJK", 26.82], ["Ari Yuliadi", "OPS", 24.26], ["Gabriel", "TJG", 21.95], ["Yudha Hervino", "SAL", 21.28], ["Muhammad Fadlan", "MKT", 20.73], ["Mochamad Kintara Al Fanza", "OPS", 20.48], ["Grace Kristono", "BUS", 20.17], ["Fawwaz", "MKT", 20.17], ["Michael Lourens", "SAL", 19.29], ["Alrizky Aulia", "DJK", 18.32], ["Muchtar Hambali", "TJR", 17.73], ["Ervin Bp", "MKT", 17.04], ["Aris Hartanto", "MKT", 17.01], ["Ahmad Mudakkir", "TMK", 16.04], ["Ferry Cahyono Putro", "SGT", 12.69], ["Rahma Azzahra", "MKT", 12.64], ["Alvin Faturahman", "MKT", 11.01], ["TJR _Muhammad Dzaky", "", 10.21], ["Adelaide Zapata", "MKT", 10.21], ["Kalingga Padel", "ITB", 9.6], ["Adinda Siti K", "MKT", 7.3], ["Muklis Faridho Novianto", "DBP", 7.27], ["Rfs", "BUS", 7.2], ["Irvan Kristanto", "DJK", 7.2], ["Kresna", "MKT", 6.62], ["Rafid A", "MKT", 6.07], ["Era Yuli Saputro", "TJG", 6.0], ["Nur Rohman Arif", "BUS", 5.12], ["Abdul Majib", "TJR", 5.1], ["Muhammad Hariyanoor", "BJM", 5.1], ["Wibby Bernaldi", "ITB", 5.02], ["Didik Prihantoro", "TMK", 5.01], ["TJE Aristo", "-", 4.04], ["Saepul Ahmad", "TMK", 4.0], ["Affan Affandi", "OPS", 4.0], ["Ugik Praseno", "MKT", 3.98], ["Bima A. Syahputra", "TMK", 3.52], ["Yudha Sanjaya", "ITB", 2.82]], "teams": [["TEAM CEISAR", 159.91, 270.44, 21, false, [["Mohammad Hammam", "MKT", 0.0, 81.04, 81.04], ["Ceisar Centiaga", "MKT", 0.0, 41.55, 41.55], ["Yogi Triguna Yusman", "MKT", 0.0, 29.83, 29.83], ["Ricardo Tanada", "MKT", 27.13, 1.5, 28.63], ["Anggi", "MKT", 0.0, 26.1, 26.1], ["Muhammad Fadlan", "MKT", 20.73, 4.11, 24.84], ["Yuda Wijaya", "MKT", 0.0, 22.67, 22.67], ["Ervin Bp", "MKT", 17.04, 3.28, 20.32], ["Fawwaz", "MKT", 20.17, 0.0, 20.17], ["Adinda Siti K", "MKT", 7.3, 10.33, 17.63], ["Aris Hartanto", "MKT", 17.01, 0.0, 17.01], ["Raymond Fadly", "MKT", 0.0, 16.07, 16.07], ["Adelaide Zapata", "MKT", 10.21, 3.01, 13.22], ["Rahma Azzahra", "MKT", 12.64, 0.0, 12.64], ["SeptianD Nugraha", "MKT", 0.0, 11.88, 11.88], ["Dhanang Tri Kurniawan", "MKT", 0.0, 11.77, 11.77], ["Alvin Faturahman", "MKT", 11.01, 0.0, 11.01], ["Kresna", "MKT", 6.62, 0.0, 6.62], ["Ugik Praseno", "MKT", 3.98, 2.14, 6.12], ["Rafid A", "MKT", 6.07, 0.0, 6.07], ["Efin Budi", "MKT", 0.0, 5.16, 5.16]]], ["TEAM CHRISMAN", 304.89, 270.84, 21, false, [["Dodi Hermawan", "SDU", 86.38, 0.0, 86.38], ["Rejib Ganda", "TJG", 75.34, 0.0, 75.34], ["Rizkika Angger", "BUS", 56.01, 0.0, 56.01], ["Yunita A Latifah", "BUS", 0.0, 44.64, 44.64], ["Feri Purwanto", "SDU", 0.0, 42.12, 42.12], ["Wicaksono Banjar", "BKJ", 0.0, 33.35, 33.35], ["Andrianto purnomo", "DJK", 32.74, 0.0, 32.74], ["Chrisman Wibowo", "BUS", 0.0, 26.55, 26.55], ["Putri Novita", "BUS", 0.0, 24.14, 24.14], ["Gabriel", "TJG", 21.95, 0.0, 21.95], ["Ambar tri putri", "BUS", 0.0, 21.42, 21.42], ["Grace Kristono", "BUS", 20.17, 0.0, 20.17], ["Defrizal Zal", "MTW", 0.0, 19.12, 19.12], ["Teguh_Cahyono", "BUS", 0.0, 15.72, 15.72], ["Nurmala Filmika", "BUS", 0.0, 15.04, 15.04], ["Rossa Fitria", "BUS", 0.0, 9.8, 9.8], ["FAKHRI AZZUMAR â˜¯ï¸", "BUS", 0.0, 7.57, 7.57], ["Rfs", "BUS", 7.2, 0.0, 7.2], ["Luffy Angga", "BUS", 0.0, 6.84, 6.84], ["Muhammad Hariyanoor", "BJM", 5.1, 0.0, 5.1], ["M Yusuf Sumardani", "TJG", 0.0, 4.53, 4.53]]], ["TEAM DAVID", 335.78, 212.88, 21, false, [["Zainul Akbar", "TMK", 73.8, 0.0, 73.8], ["Dimas Lonardi", "ITB", 53.08, 0.0, 53.08], ["Sugeng Riyadi", "JKT", 51.3, 0.0, 51.3], ["Nanda Dwi Rahmadan", "JKT", 50.29, 0.0, 50.29], ["Irwan mubar", "TMK", 31.2, 0.0, 31.2], ["Ramadhani Sugi Raharjo", "JKT", 30.58, 0.0, 30.58], ["AdhityaHadi Saputra", "ITB", 0.0, 28.16, 28.16], ["Faryz Gaffar", "TMK", 26.91, 0.0, 26.91], ["Qurrotul Uyuniyah", "SGT", 0.0, 25.48, 25.48], ["Marsha Andriana", "ITB", 0.0, 25.15, 25.15], ["Saepul Ahmad", "TMK", 4.0, 20.45, 24.45], ["Andy Suhermanto", "SGT", 0.0, 21.0, 21.0], ["Alex Site Tanjung Enim", "TJE", 0.0, 20.24, 20.24], ["Wibby Bernaldi", "ITB", 5.02, 13.53, 18.55], ["Dwiyanti Setyaningsih", "ITB", 0.0, 18.36, 18.36], ["Kalingga Padel", "ITB", 9.6, 8.36, 17.96], ["Muhammad Khairurraziqin", "SGT", 0.0, 11.82, 11.82], ["Ghifa Pane", "JKT", 0.0, 10.01, 10.01], ["Alfred Pilipus Peka", "SGT", 0.0, 5.18, 5.18], ["ITB - Laurensius David", "-", 0.0, 5.14, 5.14], ["Jaya Budi P", "SGT", 0.0, 0.0, 0.0]]], ["TEAM ERWIN", 208.96, 201.27, 21, false, [["Ario Adipradono", "SAL", 0.0, 59.13, 59.13], ["Rifqi Azhar", "OPS", 0.0, 52.26, 52.26], ["Arief Rahman Syahrija", "TJR", 30.1, 0.0, 30.1], ["Andri Prasetya Febrianto", "MLK", 28.46, 0.0, 28.46], ["Andy Prasetyo", "MLK", 28.05, 0.0, 28.05], ["Ujang Jaelani", "TJR", 0.0, 27.36, 27.36], ["Ari Yuliadi", "OPS", 24.26, 0.0, 24.26], ["Roger Triatra", "SAL", 0.0, 23.52, 23.52], ["Yudha Hervino", "SAL", 21.28, 0.0, 21.28], ["Mochamad Kintara Al Fanza", "OPS", 20.48, 0.0, 20.48], ["Michael Lourens", "SAL", 19.29, 0.0, 19.29], ["Hendra Saputra", "SAL", 0.0, 18.16, 18.16], ["Muchtar Hambali", "TJR", 17.73, 0.0, 17.73], ["Benedictus Bagaskoro", "OPS", 0.0, 12.83, 12.83], ["TJR _Muhammad Dzaky", "-", 10.21, 0.0, 10.21], ["Najid Fitra Fathur Rahman", "SAL", 0.0, 8.01, 8.01], ["Abdul Majib", "TJR", 5.1, 0.0, 5.1], ["Affan Affandi", "OPS", 4.0, 0.0, 4.0], ["Erwin Oktariyanto", "SAL", 0.0, 0.0, 0.0], ["Haryanto", "SAL", 0.0, 0.0, 0.0], ["MKT Ardi Tri Saputra BPN", "-", 0.0, 0.0, 0.0]]]], "cutoff": "4 Nov 2026"};
+const fmt=n=>n.toLocaleString('id-ID',{minimumFractionDigits:2,maximumFractionDigits:2});
+const $=id=>document.getElementById(id);
+const rk=i=>`<span class="rk ${i<3?'r'+(i+1):'rn'}">${i+1}</span>`;
+const esc0=0;const bars=(items)=>{const mx=Math.max(...items.map(x=>x[1]),1);return items.map(([l,v,k])=>`<div class="b" ${k?`data-team="${esc(k)}"`:''}><span class="l" title="${l}">${l}</span><div class="trk"><div class="fill" style="width:${v/mx*100}%"></div></div><span class="v">${fmt(v)}</span></div>`).join('')};
+let cur='walk',sel=null;
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const hit=(n,a,q)=>!q||(n+' '+a).toLowerCase().includes(q);
+function render(t){
+ cur=t;const q=$('q').value.trim().toLowerCase();
+ document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('on',b.dataset.t===t));
+ $('cut').textContent='Cut-off: '+D.cutoff;
+ $('p3').classList.toggle('hide',t!=='kon');$('grid').classList.toggle('k3',t==='kon');
+ if(t==='kon'){
+  $('ttl').textContent='TRIATRA FRESH 5.0 – KLASEMEN KONTINGEN';
+  const all=D.teams.map(x=>({n:x[0],r:x[1],w:x[2],p:x[3],no:x[4],m:x[5],t:x[1]+x[2]}));
+  const tm=all.filter(x=>!x.no).sort((a,b)=>b.t-a.t);
+  const tot=all.reduce((s,x)=>s+x.t,0);
+  if(sel&&!tm.find(x=>x.n===sel))sel=null;
+  const mem=[];all.forEach(x=>x.m.forEach(m=>mem.push({n:m[0],a:m[1],k:x.no?'-':x.n,r:m[2],w:m[3],t:m[4]})));
+  mem.sort((a,b)=>b.t-a.t);mem.forEach((m,i)=>m.i=i);
+  $('cards').innerHTML=`<div class="card"><small>Jumlah tim</small><b>${tm.length}</b></div><div class="card"><small>Total km (Run + Walk)</small><b>${fmt(tot)}</b></div><div class="card"><small>Tim terdepan</small><b>${tm[0].n.replace('TEAM ','')}</b><em>${fmt(tm[0].t)} km</em></div>`;
+  $('h1').textContent='Tabel klasemen kontingen'+(sel?' – '+sel+' (klik bar lagi untuk semua tim)':'');
+  $('h2').textContent='Bar chart total km tim (klik untuk filter)';
+  const rows=mem.filter(m=>(!sel||m.k===sel)&&hit(m.n,m.a+' '+m.k,q));
+  $('tbl').innerHTML=rows.length?`<table><thead><tr><th>#</th><th>Nama</th><th>Area</th><th>Kontingen</th><th class="r">Run</th><th class="r">Walk</th><th class="r">Total</th></tr></thead><tbody>${rows.map(m=>`<tr><td>${rk(m.i)}</td><td class="n">${esc(m.n)}</td><td class="a">${esc(m.a)}</td><td class="a">${esc(m.k)}</td><td class="r">${fmt(m.r)}</td><td class="r">${fmt(m.w)}</td><td class="r k">${fmt(m.t)}</td></tr>`).join('')}</tbody></table>`:'<div class="empty">Tidak ada hasil.</div>';
+  $('bars').innerHTML=bars(tm.map(x=>[x.n.replace('TEAM ',''),x.t,x.n]));
+  $('h3').textContent='Top 10 anggota – '+(sel||'semua tim');
+  $('bars3').innerHTML=bars(mem.filter(m=>!sel||m.k===sel).slice(0,10).map(m=>[m.n,m.t]));
+  document.querySelectorAll('#bars .b').forEach(b=>{b.classList.toggle('on',b.dataset.team===sel);b.onclick=()=>{sel=sel===b.dataset.team?null:b.dataset.team;render('kon')}});
+  return;}
+ const L=D[t],W=t==='walk'?'WALK':'RUN';
+ $('ttl').textContent='TRIATRA FRESH 5.0 – KLASEMEN '+W;
+ const tot=L.reduce((s,x)=>s+x[2],0);
+ $('cards').innerHTML=`<div class="card"><small>Peserta ${t}</small><b>${L.length}</b></div><div class="card"><small>Total ${t} (km)</small><b>${fmt(tot)}</b></div><div class="card"><small>${W[0]+W.slice(1).toLowerCase()} terjauh (km)</small><b>${fmt(L[0][2])}</b><em>${esc(L[0][0])}</em></div>`;
+ $('h1').textContent='Tabel klasemen (semua peserta)';$('h2').textContent='Bar chart Top 10';
+ const rows=L.map((x,i)=>[x,i]).filter(([x])=>hit(x[0],x[1],q));
+ $('tbl').innerHTML=rows.length?`<table><thead><tr><th>#</th><th>Nama</th><th>Area</th><th class="r">KM</th></tr></thead><tbody>${rows.map(([x,i])=>`<tr><td>${rk(i)}</td><td class="n">${esc(x[0])}</td><td class="a">${esc(x[1])}</td><td class="r k">${fmt(x[2])}</td></tr>`).join('')}</tbody></table>`:'<div class="empty">Tidak ada hasil.</div>';
+ $('bars').innerHTML=bars(L.slice(0,10).map(x=>[x[0],x[2]]));
+}
+$('q').oninput=()=>render(cur);
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>render(b.dataset.t));
+render('walk');
+</script></body></html>
