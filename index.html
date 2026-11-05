@@ -38,7 +38,22 @@ td.m{color:#b9b9b4;font-size:11px;line-height:1.5;max-width:240px}tr.sel td{back
 .th td{background:#1a1a1a;border-top:1px solid #333;padding:8px 0}.th td:first-child{padding-left:6px}.mem td{padding:4px 0;font-size:11.5px}.mn{padding-left:28px!important;color:#d6d6d2}.mem td.r{color:#b9b9b4}
 .b[data-team]{cursor:pointer}.b.on .fill{background:#8fd43a}.b.on .l{font-weight:700}
 .empty{color:var(--mu);font-size:12px;padding:12px 0}
-@media(max-width:900px){.grid,.grid.k3{grid-template-columns:1fr}.scroll{max-height:420px}.search{width:100%}.rt{width:100%}.cards{grid-template-columns:1fr 1fr 1fr}.card b{font-size:17px}.b{grid-template-columns:84px 1fr 38px}}
+@media(max-width:900px){
+body{padding:8px}.wrap{padding:12px;border-radius:14px}
+.grid,.grid.k3{grid-template-columns:1fr}
+#p2{order:1}#p3{order:2}#p1{order:3}
+.scroll{max-height:460px;min-height:0}
+.search{width:100%}.rt{width:100%;flex-wrap:wrap}.cut{width:100%;text-align:center}
+h1{font-size:14px}
+.tabs{position:sticky;top:0;z-index:5;background:#111;padding:6px 0;margin:0 0 8px}
+.tab{padding:13px 6px;font-size:13px}
+.cards{grid-template-columns:1fr 1fr}.cards .card:last-child{grid-column:1/-1}
+.card b{font-size:18px}
+td{padding:9px 0}td.n,.mn{font-size:13px}.mem td{padding:9px 0}
+.cr{display:none}
+.b{grid-template-columns:90px 1fr 42px;font-size:12px}.trk{height:15px}
+}
+@media(max-width:380px){.b{grid-template-columns:76px 1fr 40px}.tab{font-size:12px}}
 </style></head><body>
 <div class="wrap">
  <div class="top"><h1 id="ttl"></h1><div class="rt"><input class="search" id="q" type="search" placeholder="Cari nama atau area…"><div class="cut" id="cut"></div></div></div>
@@ -74,7 +89,7 @@ function render(t){
   $('h1').textContent='Tabel klasemen kontingen'+(sel?' – '+sel+' (klik bar lagi untuk semua tim)':'');
   $('h2').textContent='Bar chart total km tim (klik untuk filter)';
   const rows=mem.filter(m=>(!sel||m.k===sel)&&hit(m.n,m.a+' '+m.k,q));
-  $('tbl').innerHTML=rows.length?`<table><thead><tr><th>#</th><th>Nama</th><th>Area</th><th>Kontingen</th><th class="r">Run</th><th class="r">Walk</th><th class="r">Total</th></tr></thead><tbody>${rows.map(m=>`<tr><td>${rk(m.i)}</td><td class="n">${esc(m.n)}</td><td class="a">${esc(m.a)}</td><td class="a">${esc(m.k)}</td><td class="r">${fmt(m.r)}</td><td class="r">${fmt(m.w)}</td><td class="r k">${fmt(m.t)}</td></tr>`).join('')}</tbody></table>`:'<div class="empty">Tidak ada hasil.</div>';
+  $('tbl').innerHTML=rows.length?`<table><thead><tr><th>#</th><th>Nama</th><th>Area</th><th>Kontingen</th><th class="r cr">Run</th><th class="r cr">Walk</th><th class="r">Total</th></tr></thead><tbody>${rows.map(m=>`<tr><td>${rk(m.i)}</td><td class="n">${esc(m.n)}</td><td class="a">${esc(m.a)}</td><td class="a">${esc(m.k)}</td><td class="r cr">${fmt(m.r)}</td><td class="r cr">${fmt(m.w)}</td><td class="r k">${fmt(m.t)}</td></tr>`).join('')}</tbody></table>`:'<div class="empty">Tidak ada hasil.</div>';
   $('bars').innerHTML=bars(tm.map(x=>[x.n.replace('TEAM ',''),x.t,x.n]));
   $('h3').textContent='Top 10 anggota – '+(sel||'semua tim');
   $('bars3').innerHTML=bars(mem.filter(m=>!sel||m.k===sel).slice(0,10).map(m=>[m.n,m.t]));
