@@ -3,23 +3,23 @@
 <title>Triatra Fresh 5.0 – Klasemen</title>
 <style>
 :root{--bg:#0e0e0e;--card:#141414;--line:#2a2a2a;--tx:#f2f2f0;--mu:#8d8d88;--g:#5f9f1c;--tr:#1b1b1b}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;padding:20px}
-.wrap{max-width:760px;margin:0 auto;background:#111;border:1px solid var(--line);border-radius:18px;padding:18px}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;padding:14px}
+.wrap{max-width:1500px;margin:0 auto;background:#111;border:1px solid var(--line);border-radius:18px;padding:18px}
 .top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px}
 h1{font-size:16px;margin:0;letter-spacing:.02em;font-weight:600}
 .cut{font-size:12px;color:var(--mu);border:1px solid var(--line);background:var(--card);border-radius:8px;padding:6px 12px}
-.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:10px}
 .tab{background:#0b0b0b;border:1px solid var(--line);color:var(--tx);border-radius:10px;padding:12px;font:600 14px inherit;font-family:inherit;cursor:pointer}
 .tab.on{background:#f1f0ee;color:#111}
-.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px;min-width:0}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:10px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:9px 14px;min-width:0}
 .card small{display:block;color:var(--mu);font-size:11px;margin-bottom:4px}
-.card b{font-size:22px;font-weight:600;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.card b{font-size:20px;font-weight:600;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .card em{font-style:normal;color:var(--mu);font-size:11px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.grid{display:grid;grid-template-columns:1.25fr 1fr;gap:10px}.grid.k3{grid-template-columns:1.7fr 1fr 1fr}.rt{display:flex;gap:10px;align-items:center}
 .panel{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px;min-width:0}
 .panel h3{margin:0 0 10px;font-size:12px;font-weight:500;color:var(--mu)}
-.scroll{max-height:372px;overflow:auto;scrollbar-width:thin;scrollbar-color:#333 transparent}
+.scroll{max-height:calc(100vh - 330px);min-height:240px;overflow:auto;scrollbar-width:thin;scrollbar-color:#333 transparent}
 table{width:100%;border-collapse:collapse;font-size:12px}
 th{color:var(--mu);font-weight:400;text-align:left;font-size:11px;padding:0 0 6px;position:sticky;top:0;background:var(--card)}
 td{padding:6px 0;border-top:1px solid #222}th.r,td.r{text-align:right}
@@ -32,18 +32,17 @@ td.n{font-weight:500;font-size:12.5px}td.a{color:var(--mu);font-size:11px}td.k{f
 .trk{background:var(--tr);border-radius:3px;height:13px;overflow:hidden}.fill{height:100%;background:var(--g);border-radius:3px}
 .b span.v{text-align:right;font-weight:600}
 .muted td{color:var(--mu)}
-.search{width:100%;background:#0b0b0b;border:1px solid var(--line);color:var(--tx);border-radius:10px;padding:11px 14px;font:13px inherit;font-family:inherit;margin-bottom:14px;outline:none}
+.search{width:260px;background:#0b0b0b;border:1px solid var(--line);color:var(--tx);border-radius:10px;padding:7px 12px;font:13px inherit;font-family:inherit;outline:none}
 .search:focus{border-color:#5f9f1c}.full{grid-column:1/-1}.hide{display:none}
 td.m{color:#b9b9b4;font-size:11px;line-height:1.5;max-width:240px}tr.sel td{background:#1b2412}tr.team{cursor:pointer}
-.th td{background:#1a1a1a;border-top:1px solid #333;padding:8px 0}.th td:first-child{padding-left:6px}.mem td{padding:4px 0;font-size:11.5px}.mn{padding-left:28px!important;color:#d6d6d2}.mem td.r{color:#b9b9b4}.scroll.tall{max-height:520px}
+.th td{background:#1a1a1a;border-top:1px solid #333;padding:8px 0}.th td:first-child{padding-left:6px}.mem td{padding:4px 0;font-size:11.5px}.mn{padding-left:28px!important;color:#d6d6d2}.mem td.r{color:#b9b9b4}
 .b[data-team]{cursor:pointer}.b.on .fill{background:#8fd43a}.b.on .l{font-weight:700}
 .empty{color:var(--mu);font-size:12px;padding:12px 0}
-@media(max-width:620px){.grid{grid-template-columns:1fr}.cards{grid-template-columns:1fr 1fr 1fr}.card b{font-size:17px}.b{grid-template-columns:84px 1fr 38px}}
+@media(max-width:900px){.grid,.grid.k3{grid-template-columns:1fr}.scroll{max-height:420px}.search{width:100%}.rt{width:100%}.cards{grid-template-columns:1fr 1fr 1fr}.card b{font-size:17px}.b{grid-template-columns:84px 1fr 38px}}
 </style></head><body>
 <div class="wrap">
- <div class="top"><h1 id="ttl"></h1><div class="cut" id="cut"></div></div>
+ <div class="top"><h1 id="ttl"></h1><div class="rt"><input class="search" id="q" type="search" placeholder="Cari nama atau area…"><div class="cut" id="cut"></div></div></div>
  <div class="tabs"><button class="tab on" data-t="walk">WALK</button><button class="tab" data-t="run">RUN</button><button class="tab" data-t="kon">KONTINGEN</button></div>
- <input class="search" id="q" type="search" placeholder="Cari nama atau area…">
  <div class="cards" id="cards"></div>
  <div class="grid" id="grid"><div class="panel" id="p1"><h3 id="h1"></h3><div class="scroll" id="tbl"></div></div>
  <div class="panel"><h3 id="h2"></h3><div class="bars" id="bars"></div></div>
@@ -62,7 +61,7 @@ function render(t){
  cur=t;const q=$('q').value.trim().toLowerCase();
  document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('on',b.dataset.t===t));
  $('cut').textContent='Cut-off: '+D.cutoff;
- $('p3').classList.toggle('hide',t!=='kon');$('p1').classList.toggle('full',t==='kon');$('tbl').classList.toggle('tall',t==='kon');
+ $('p3').classList.toggle('hide',t!=='kon');$('grid').classList.toggle('k3',t==='kon');
  if(t==='kon'){
   $('ttl').textContent='TRIATRA FRESH 5.0 – KLASEMEN KONTINGEN';
   const all=D.teams.map(x=>({n:x[0],r:x[1],w:x[2],p:x[3],no:x[4],m:x[5],t:x[1]+x[2]}));
